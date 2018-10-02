@@ -1,0 +1,269 @@
+﻿INPUT DESCRIPTION - FROM NASA CR - READ BEFORE CHANGING HARDWIRED INPUTS
+(Refer to CR for more info...)
+
+ISOLV
+Method to be used for solving the system of linear equations relating the 
+boundary conditions to the vorticity strength, in integer format, in column 2. 
+ISOLV = 0: Gauss-Seidel relaxation with accelerated convergence (under- or 
+over-relaxation); ISOLV = 1: Purcell's vector orthogonalization method.
+
+LAX
+Chordwise, or streamwise, spacing of vortices, integer quantity punched in 
+column 12, LAX = 0: vortices are collocated at the percent chord (X/C) values
+determined by the cosine law X/C = 0.5 (1-cos((2K-1)pi/2N)), where K varies 
+between 1 and N, N being the number of chordwise vortices; LAX = 1: vortices 
+are collocated according to the equally-spaced quarter-chord law:
+X/C = (4K-3)/(4N). The cosine law is recommended for greater accuracy for a
+given number of vortices.
+
+LAY
+Spanwise, or lateral, spacing of vortices, integer quantity punched in column 
+22. LAY = 0: vortices are spaced at intervals (elementary vortex span) given by
+the cosine distribution law delta_b = bp(cos((J-1)pi/M)-cos(J*pi/M))/2, where
+delta_b is the vortex element span, bp is the panel span, and 1 varies between 
+1 and M, M being the spanwise number of vortices in a given panel; LAY = 1: 
+vortices are equally spaced along the panel span, i.e., delta_b = bp/M. The
+cosine spacing is recommended for enhanced accuracy, but for most cases the
+difference in the results between cosine spanwise spacing and even spanwise 
+spacing is negligible.
+
+REXPAR
+Over-relaxation parameter, in F10.0 format starting in column 31. This 
+parameter is intended to accelerate the Gauss-Seidel relaxation process, and/or
+make it converge when it might otherwise diverge. Blank, or zero, input, 
+implies that the program will compute internally the optimum overrelaxation 
+value. If a positive quantity between 0.01 and 0.99 is input, this becomes the 
+value of the over-relaxation parameter that the program will use, the optimum 
+value being overridden. If ISOLV = 1, this parameter is not used, and 
+therefore, not a required input quantity.
+
+HAG
+Height above ground of the moment reference center, in F10.0 format starting in
+column 41. If it is punched equal to zero, or left blank, the height above the 
+ground is infinity, i.e., no ground effect. If a quantity different than zero 
+is input, then the ground effect will be computed by the method of images, the 
+height being given by the input value, in consistent units.
+
+FLOATX
+Longitudinal vortex wake flotation factor, in F10.0 format, starting in column 
+51. If zero, or blank, then the trailing vortex legs being shed from the 
+corresponding trailing edges, extend to infinity parallel to the X-Y plane. If 
+a value different from zero is input, then the trailing vortex legs shed from 
+the trailing edges form an angle alpha_v=FLOATX*ALPHA with the X-Y plane, where
+ALPHA is the freestream angle of attack. (See figure A-6)
+
+FLOATY
+Lateral vortex wake flotation factor, in F10.0 format, starting in column 61.
+If zero or blank, then the trailing vortex legs being shed from the
+corresponding trailing edges extend to infinity parallel to the X-Z plane. If
+a value different from zero is input, then the vortex legs shed from the
+trailing edges form an angle beta_v = FLOATY*BETA with the X-Z plane, where
+BETA is the freestream angle of slideslip (see figure A-6). 
+
+ITRMAX
+Maximum number of iterations allowed for the Gauss-Seidel relaxation method, in
+I3 format right-adjusted to column 80. If no value is input, the code will make
+ITRMAX = 99 by default. If ISOLV = 1, i.e., the vector orthogonalization 
+solution is resorted to, then ITRMAX is not a required input. 
+
+LATRL
+Asymmetric flight or configuration flag. 0 in column 2 = symmetric flight and 
+symmetric configuration about the X-Z plane. 1 in column 2 = asymmetric flight 
+and/or asymmetric configuration.
+
+PSI
+Sideslip angle in degrees in F10.O format starting in column 11. + = wind 
+coming from left side of nose. Input 0. or blank when LATRAL is 0. Used to 
+obtain static stability derivatives such as Cnbeta, Cybeta, etc.
+
+PITCHQ
+Pitch rate in degrees/second, + = nose up pitch. Used to obtain dynamic 
+stability derivatives such as Cmq, CLq, etc. LATRAL may be 0 when PITCHQ is 
+nonzero.
+
+ROLLQ
+Roll rate in degrees/second, + = left roll. Input 0. or blank when LATRAL is 0.
+Used to obtain dynamic stability derivatives such as Clp, Cnp, etc.
+
+YAWQ
+Yaw rate in degrees/second, + = left yaw or airstream component washing from 
+left to right across nose of airplane. Input 0. or blank when LATRAL is 0.
+Used to obtain dynamic stability derivatives such as Cnr, Cyr, etc.
+
+VINF
+Reference free stream velocity. If no value is input, VINF is automatically set
+equal to 1.0 by the program. This parameter is only used when any of the 
+angular rates is different from zero. It enters in the computation of the 
+equivalent flow angle. For instance, if VINF = WSPAN/2 (wing semispan) and 
+ROLLQ = 5.73, then pb/2V = 0.1, and the rolling moment coefficient printed out 
+by the program will be exactly one-tenth the value of the stability derivative 
+Clp. Likewise, if VINF = CBAR/2 (half the mean aerodynamic chord) and 
+PITCHQ = 5.73, then the difference between the output pitching moment 
+coefficient and the pitching moment coefficient for the case PITCHQ = 0 will 
+be equal to one-tenth of the Cmq derivative.
+
+NPAN
+Number of major panels that will define the configuration; integer value SREF 
+Reference area for force and moment coefficients,
+
+CBAR
+Pitching moment coefficient reference length. Usually mean aerodynamic chord. 
+
+XBAR
+Abscissa of moment reference point, X-coordinate in master frame of reference 
+
+ZBAR
+Ordinate of moment reference point. Z-coordinate in master frame of reference
+
+WSPAN
+Total wing span in units consistent with SREF and CBAR in F10.0 format starting
+in column 51. If left blank, a value of 2.0 will be assumed by the program.
+
+X1
+X or longitudinal coordinate of the leading edge of one side of a major panel.
+Usually taken as the most inboard side in the case of wings. Input in F10.0 
+format starting in column 1.
+
+Y1
+Y or lateral coordinate of leading edge of first side of a major panel. Input 
+in F10.0 format starting in column 11.
+
+Z1
+Z or vertical coordinate of leading edge of first side of a major panel. Input
+in F10.0 format starting in column 21.
+ 
+CORD1
+Chord length of first side of major panel measured from XI, Yl, Z1 above in the
+positive direction of, and parallel to, the X axis.
+
+X2
+X or longitudinal coordinate of the leading edge of the second side of the 
+major panel described on card (7). Usually taken as the most outboard side in 
+the case of wings. In the case of a closed curved panel, e.g., a cylindrical 
+segment representative of a nacelle, X2 would be identical to X1. Input in 
+F10.0 format starting in column 1.
+
+Y2
+Y or lateral coordinate of leading edge of second side of the major panel
+described on Card (7). Input in F10.0 format starting i10 column 11.
+
+Z2
+Z or vertical coordinate of leading edge of second side of the major panel 
+described on Card (7). Input in F10.0 format starting in column 21.
+ 
+CORD2
+Chord length of second side of major panel measured from X2, Y2, Z2 above in
+the positive direction of, and parallel to, the X axis.
+
+NVOR
+Number of spanwise elements or vortices that will be used to represent the 
+panel, in F10.0 format starting in column 1. NV0R <100.0.
+
+RNCV
+Number of chordwise vortices that will be used to represent the panel in F10.0
+format starting in column 11. RNCV<=50. Tne program, using NV0R and RNCV, will 
+subdivide the panel under consideration into a grid of NVOR * RNCV swept 
+horseshoe vortices collocated in accordance with the values of the LAX and LAY
+parameters. Note that chordwise and lateral distributions are independent,
+e.g., a cosine chordwise spacing (LAX=0) is compatible with equal spanwise
+distribution (LAY=1), and vice versa. The corresponding control points at which
+the boundary conditions are satisfied are collocated according to the law 
+(X/C)control = 0.5 (1-cos (K pi/N)), K varying between 1 and N, where N is the
+number of chordwise vortices, if LAX = 0. If LAX = 1, then the control points 
+are placed at (X/C)control = (4K-1)/(4N), namely, according to the equally
+spaced three-quarter chord distribution. The spanwise location of the control 
+points is always at the centerline of the elementary swept horseshoe vortices.
+
+SPC
+Leading edge suction multiplier, in F10.0 format starting in column 21.	0 = no
+suction, 1 = 100 percent leading edge suction. Nonzero values are recommended 
+for all panels whose leading edges are wetted by the airstream. The program has
+the capability of computing the effects of free leading edge vorticity (leading
+edge vortex flows) by a localized application of the Polhamus analogy. This 
+computation is triggered by inputting the SPC parameter as a negative quantity.
+When this is done, the sectional leading edge suction vector will be rotated 
+normal to the camber surface at the leading edge, instead of the corresponding
+attached-flow tangential orientation, and the forces and moments will be 
+computed using the rotated suction vector.
+
+PDL
+Planar/curved panel flag, in F10.0 format starting in column 31. 0 = planar 
+major panel is to be described (including warped planar). PDL = 999 (or >360) =
+a curved major panel is to be described.
+
+AINC1
+Tangent of the angle subtended by major panel root chordline, or first edge
+(described in Card (7)), and the positive X-axis, in F10.0 format starting in
+column 1. Sign convention is determined by observing the edge 1 chordline and 
+the X-axis from edge 2. The edge 1 chord is then rotated counterclockwise until
+it is parallel to the X-axis. If the angle rotated through is less than 90 
+degrees then the angle, and consequently its tangent, are considered positive.
+If it is greater than 90 degrees, then AINC1 is negative.
+
+AINC2
+Tangent of the angle subtended by major panel tip chordline, or second edge
+(described in Card (8)), in F10.0 format starting in column 11. Sign convention
+is determined by observing edge 2 and the X—axis, looking in the direction from
+edge 2 toward edge 1. The edge 2 chord is then rotated counterclockwise until
+it is parallel to the X-axis. If the angle rotated through is less than 90 
+degrees, then the sign is positive; otherwise it is negative.
+
+ITS
+Surface flag input as a two place integer in columns 21 and 22, right—adjusted
+to column 22. ITS = 0 or blank indicates that the panel is considered as a 
+lifting surface of zero thickness, i.e., both its upper and lower surface are 
+wetted "by the external flow. ITS = 01 means that only the panel upper surface 
+is wetted ty the real external flow. ITS = -1 indicates that only the panel 
+lower surface is wetted by the real external flow. A double panel setup can 
+then be used to represent a wing-like component with non-zero thickness, as 
+previously illustrated in Figure 2. Notice that the X1, Yl, Z1, X2, Y2, and Z2
+values to be input correspond to the control surface plane, and not to the 
+actual chordal plane. The results are not critically sensitive to the 
+separation between the upper surface panel (ITS = 01) and the lower surface 
+panel (ITS = -1), a separation of two thirds the thickness ratio of the airfoil
+being a good average value to use.
+
+NAP
+Number of percent chords or stations along the chord (C0RD1 and C0RD2) at which
+the camber, or surface, ordinates are to be input. Input as a two-place integer
+in columns 31 and 32, right-adjusted to column 32. Maximum value of NAP is 50.
+A NAP = 0, 1, or 2 will be interpreted as a flat wing and no subsequent camber
+cards will be expected. If ISYNT, on this same card, is to be input as 1, i.e.,
+a design case, then NAP should be 0 or blank
+
+IQUANT
+Symmetry flag with respect to X-Z plane input as an integer in column 42. 
+IQUANT = 0 or 2 indicates there is a mirror image of the panel on the opposite
+side of the X-Z plane. IQUANT = 1 indicates the panel is unique to the side for
+which it is being input.
+
+ISYNT
+Design/analysis flag input as an integer in column 52. ISYNT = 0 or blank 
+indicates that the panel has been defined geometrically and only analysis is to
+take place. ISYNT = 1 indicates that the panel camber is to be designed by the
+program to support a specified pressure distribution. If NAP on this same card
+was input >2, then ISYNT should be zero or blank.
+
+NPP
+Nonplanar parameter, input as on integer in column 62. NPP = 0 indicates that
+all the vortex filaments representing a given surface lie in the cylindrical
+surface whose directrix is the leading edge of the panel, and whose 
+generatrices are all parallel to the X-axis. NPP = 1 denotes that the 
+transverse vortex, filaments are located on the actual body surface, but the
+bound trailing legs are parallel to the x-axis. This parameter affects the 
+definition of ZC^ and ZC2 on cards 16 and 18.
+
+NXS
+Number of X-stations that will define the spatial flow field survey grid. 
+NXS = 00 means no survey desired. Maximum value of NXS is 20. Input as a 
+two-digit integer in columns 1 and 2, right-adjusted to column 2.
+
+NYS
+Number of Y-stations that will define the butt line values of the survey grid.
+NYS = 00 for no survey. NYS and NZS (following) may be any positive integer
+subject to NXS * NYS * NZS < 2000. Input as a two digit integer in columns 
+11 and 12.
+
+NZS
+Number of Z-stations that will define the water line values of the survey grid.
+NZS = 00 for no survey. Input as a two digit integer in columns 21 and 22.
