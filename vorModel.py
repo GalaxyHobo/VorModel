@@ -62,7 +62,8 @@ I.e.:
 2.6595
 
 Enjoy!
-Lance Bays, 10/2/2018, veranautics@gmail.com
+Lance Bays
+veranautics@gmail.com
 '''
 import math
 # START Changing Inputs Here ***************************
@@ -73,7 +74,7 @@ inputGeo = {'acProject': 'Parametrically Generated 737',
     'taperWingInDecimal': 0.278,
     'sweepLeWingInDeg': 27.75,
     'dihedralWingInDeg': 2.5,
-    'xDistWingApexInIn': 400,
+    'xDistWingApexInIn': 550,
     'mrpMacPct': 25,
     # Spanwise location of wing control stations
     'bSta1OverHalfSpan': 0.109552, # Spanwise Location of station #1 as fraction of half span (width of fuse)
@@ -89,18 +90,18 @@ inputGeo = {'acProject': 'Parametrically Generated 737',
     'ratioCSta5OverCtrap': 1., # Ratio of actual chord at station #5 over reference chord of equivalent trapezoidal wing
     'ratioCSta6OverCtrap': 0.5, # Ratio of actual chord at station #6 over reference chord of equivalent trapezoidal wing
     # Variation of sweep from reference value at control stations 
-    'sweepIncrDegSta1': 4, # Increment in actual sweep above reference sweep from station #1 to station #2 
+    'sweepIncrDegSta1': 5, # Increment in actual sweep above reference sweep from station #1 to station #2 
     'sweepIncrDegSta2': 0, # Increment in actual sweep above reference sweep from station #2 to station #3
     'sweepIncrDegSta3': 0., # Increment in actual sweep above reference sweep from station #3 to station #4
     'sweepIncrDegSta4': 0., # Increment in actual sweep above reference sweep from station #4 to station #5
     'sweepIncrDegSta5': 45., # Increment in actual sweep above reference sweep from station #5 to station #6
-    # Incidence at control stations, positive equal wash-IN (TE down)
+    # Incidence at control stations, positive equal wash-OUT (TE up)
     'incidenceDegSta1': 0, # Incidence at station #1 
     'incidenceDegSta2': 0, # Incidence at station #2 
-    'incidenceDegSta3': -0.5, # Incidence at station #3 
-    'incidenceDegSta4': -1, # Incidence at station #4 
-    'incidenceDegSta5': -2, # Incidence at station #5
-    'incidenceDegSta6': -5, # Incidence at station #6
+    'incidenceDegSta3': 0.5, # Incidence at station #3 
+    'incidenceDegSta4': 1, # Incidence at station #4 
+    'incidenceDegSta5': 2, # Incidence at station #5
+    'incidenceDegSta6': 5, # Incidence at station #6
      # Vertical shear at control stations, positive equal up from dihedral line
     'zShearInInSta1': 0, # Vertical displacement above dehedral line at station #1 
     'zShearInInSta2': 10, # Vertical displacement above dehedral line at station #2
@@ -126,7 +127,7 @@ inputGeo = {'acProject': 'Parametrically Generated 737',
     'hTailIncidenceInDeg': 0, # Positive = TE down
     'mrpMacHTailPct': 25,
     # VERTICAL TAIL DEFINITION:
-    'isVTailOn': 1, # OFF=0, ON (UPPER SIDE)=1, ON (UPPER SIDE)=-1
+    'isVTailOn': 1, # OFF=0, ON (DORSAL)=1, ON (VENTRAL)=-1
     'sRefVTailInFt2': 248.96,
     'arVTail': 2.156,
     'taperVTailInDecimal': 0.31,
@@ -160,9 +161,9 @@ sweepQtrChordWingInDeg = radToDeg * math.atan((bOver2InIn * \
                          math.tan(inputGeo['sweepLeWingInDeg'] * degToRad) + \
                          cTipInIn / 4 - cRootInIn / 4) / bOver2InIn)
 yMacInIn = bInIn / 6 * ((1 + 2 * inputGeo['taperWingInDecimal']) / \
-                        (1 + inputGeo['taperWingInDecimal'])) 
-zMrpInIn = (yMacInIn - halfFuseInIn) * \
-           math.sin(inputGeo['dihedralWingInDeg'] * degToRad)
+                        (1 + inputGeo['taperWingInDecimal']))
+sinDihedralAngle = math.sin(inputGeo['dihedralWingInDeg'] * degToRad)
+zMrpInIn = (yMacInIn - halfFuseInIn) * sinDihedralAngle
 xLeMacInIn = inputGeo['xDistWingApexInIn'] + \
              bOver2InIn * math.tan(inputGeo['sweepLeWingInDeg'] * degToRad) * \
              1 / 3 * (1 + 2 * inputGeo['taperWingInDecimal']) / \
@@ -175,8 +176,7 @@ xWingFuseInIn = inputGeo['xDistWingApexInIn'] + halfFuseInIn * \
                 math.tan(inputGeo['sweepLeWingInDeg'] * degToRad) 
 xTipInIn = inputGeo['xDistWingApexInIn'] + \
            bOver2InIn * math.tan(inputGeo['sweepLeWingInDeg'] * degToRad) 
-zTipInIn = (bOver2InIn - halfFuseInIn) * \
-           math.sin(inputGeo['dihedralWingInDeg'] * degToRad)
+zTipInIn = (bOver2InIn - halfFuseInIn) * sinDihedralAngle
 
 # Determine spanwise location of wing control stations 
 ySta1InIn = inputGeo['bSta1OverHalfSpan'] * bInIn / 2
@@ -198,8 +198,6 @@ chordSta4InIn = (cRootInIn - inputGeo['bSta4OverHalfSpan'] * \
 chordSta5InIn = (cRootInIn - inputGeo['bSta5OverHalfSpan'] * \
                 (cRootInIn - cTipInIn)) * inputGeo['ratioCSta5OverCtrap'] 
 chordSta6InIn = cTipInIn * inputGeo['ratioCSta6OverCtrap'] 
-
-sinDihedralAngle = math.sin(inputGeo['dihedralWingInDeg'] * degToRad)
 
 # Determine horizontal tail characteristics
 sRefHTailInIn2 = 144 * inputGeo['sRefHTailInFt2'] 
@@ -576,20 +574,20 @@ fin.write('*VORLAX inputs for Wing:\n')
 
 # Inboard-most wing panel ***
 fin.write('*       X1        Y1        Z1     CORD1')
-fin.write(' COMMENT: INBOARD-MOST WING PANEL\n') 
-xSta1InIn = xLeMacInIn + \
-ySta1InIn * math.tan(inputGeo['sweepLeWingInDeg'] * degToRad) 
-fin.write("{:10.3f}".format(xSta1InIn) +
+fin.write(' COMMENT: INBOARD-MOST WING PANEL\n')            
+fin.write("{:10.3f}".format(xWingFuseInIn) +
           "{:10.3f}".format(ySta1InIn) +
- "{:10.3f}".format(sinDihedralAngle * ySta1InIn + inputGeo['zShearInInSta1']) +
+          "{:10.3f}".format(sinDihedralAngle * (ySta1InIn - halfFuseInIn) + 
+          inputGeo['zShearInInSta1']) +
           "{:10.3f}".format(chordSta1InIn) + '\n')
 fin.write('*       X2        Y2        Z2     CORD2\n')
-xSta2InIn = xSta1InIn + (ySta2InIn-ySta1InIn) * \
+xSta2InIn = xWingFuseInIn + (ySta2InIn - ySta1InIn) * \
             math.tan((inputGeo['sweepLeWingInDeg'] + \
-            inputGeo['sweepIncrDegSta1'])*degToRad)
+            inputGeo['sweepIncrDegSta1']) * degToRad)
 fin.write("{:10.3f}".format(xSta2InIn) +
           "{:10.3f}".format(ySta2InIn) +
- "{:10.3f}".format(sinDihedralAngle * ySta2InIn + inputGeo['zShearInInSta2']) +
+          "{:10.3f}".format(sinDihedralAngle * (ySta2InIn - halfFuseInIn) + 
+          inputGeo['zShearInInSta2']) +
           "{:10.3f}".format(chordSta2InIn) + '\n')
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
 fin.write('        10     15.00      1.00      0.00\n')
@@ -605,15 +603,17 @@ fin.write('*       X1        Y1        Z1     CORD1')
 fin.write(' COMMENT: SECOND INBOARD WING PANEL\n') 
 fin.write("{:10.3f}".format(xSta2InIn) +
           "{:10.3f}".format(ySta2InIn) +
- "{:10.3f}".format(sinDihedralAngle * ySta2InIn + inputGeo['zShearInInSta2']) +
+          "{:10.3f}".format(sinDihedralAngle * (ySta2InIn - halfFuseInIn) + 
+          inputGeo['zShearInInSta2']) +
           "{:10.3f}".format(chordSta2InIn) + '\n') 
 fin.write('*       X2        Y2        Z2     CORD2\n')
-xSta3InIn = xSta2InIn + (ySta3InIn-ySta2InIn) * \
+xSta3InIn = xSta2InIn + (ySta3InIn - ySta2InIn) * \
             math.tan((inputGeo['sweepLeWingInDeg'] + \
-            inputGeo['sweepIncrDegSta2'])*degToRad)
+            inputGeo['sweepIncrDegSta2']) * degToRad)
 fin.write("{:10.3f}".format(xSta3InIn) + \
           "{:10.3f}".format(ySta3InIn) +
- "{:10.3f}".format(sinDihedralAngle * ySta3InIn + inputGeo['zShearInInSta3']) +
+          "{:10.3f}".format(sinDihedralAngle * (ySta3InIn - halfFuseInIn) + 
+          inputGeo['zShearInInSta3']) +
           "{:10.3f}".format(chordSta3InIn) + '\n') 
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
 fin.write('        10     15.00      1.00      0.00\n')
@@ -629,15 +629,17 @@ fin.write('*       X1        Y1        Z1     CORD1')
 fin.write(' COMMENT: MIDDLE WING PANEL\n') 
 fin.write("{:10.3f}".format(xSta3InIn) +
           "{:10.3f}".format(ySta3InIn) +
- "{:10.3f}".format(sinDihedralAngle * ySta3InIn + inputGeo['zShearInInSta3']) +
+          "{:10.3f}".format(sinDihedralAngle * (ySta3InIn - halfFuseInIn) + 
+          inputGeo['zShearInInSta3']) +
           "{:10.3f}".format(chordSta3InIn) + '\n')
 fin.write('*       X2        Y2        Z2     CORD2\n')
-xSta4InIn = xSta3InIn + (ySta4InIn-ySta3InIn) * \
+xSta4InIn = xSta3InIn + (ySta4InIn - ySta3InIn) * \
             math.tan((inputGeo['sweepLeWingInDeg'] + \
-            inputGeo['sweepIncrDegSta3'])*degToRad)
+            inputGeo['sweepIncrDegSta3']) * degToRad)
 fin.write("{:10.3f}".format(xSta4InIn) +
           "{:10.3f}".format(ySta4InIn) +
- "{:10.3f}".format(sinDihedralAngle * ySta4InIn + inputGeo['zShearInInSta4']) +
+          "{:10.3f}".format(sinDihedralAngle * (ySta4InIn - halfFuseInIn) + 
+          inputGeo['zShearInInSta4']) +
           "{:10.3f}" .format(chordSta4InIn) + '\n') 
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
 fin.write('        10     15.00      1.00      0.00\n')
@@ -653,15 +655,17 @@ fin.write('*       X1        Y1        Z1     CORD1')
 fin.write(' COMMENT: SECOND-MOST OUTBOARD WING PANEL\n') 
 fin.write("{:10.3f}".format(xSta4InIn) +
           "{:10.3f}".format(ySta4InIn) +
- "{:10.3f}".format(sinDihedralAngle * ySta4InIn + inputGeo['zShearInInSta4']) +
+          "{:10.3f}".format(sinDihedralAngle * (ySta4InIn - halfFuseInIn) +
+          inputGeo['zShearInInSta4']) +
           "{:10.3f}".format(chordSta4InIn) + '\n') 
 fin.write('*       X2        Y2        Z2     CORD2\n')
 xSta5InIn = xSta4InIn + (ySta5InIn-ySta4InIn) * \
 math.tan((inputGeo['sweepLeWingInDeg'] + \
-          inputGeo['sweepIncrDegSta4'])*degToRad) 
+          inputGeo['sweepIncrDegSta4']) * degToRad) 
 fin.write("{:10.3f}".format(xSta5InIn) +
           "{:10.3f}".format(ySta5InIn) +
- "{:10.3f}".format(sinDihedralAngle * ySta5InIn + inputGeo['zShearInInSta5']) +
+          "{:10.3f}".format(sinDihedralAngle * (ySta5InIn - halfFuseInIn) + 
+          inputGeo['zShearInInSta5']) +
           "{:10.3f}".format(chordSta5InIn) + '\n')
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
 fin.write('        10     15.00      1.00      0.00\n')
@@ -677,15 +681,17 @@ fin.write('*       X1        Y1        Z1     CORD1')
 fin.write(' COMMENT: MOST OUTBOARD WING PANEL\n') 
 fin.write("{:10.3f}".format(xSta5InIn) +
           "{:10.3f}".format(ySta5InIn) +
- "{:10.3f}".format(sinDihedralAngle * ySta5InIn + inputGeo['zShearInInSta5']) +
+          "{:10.3f}".format(sinDihedralAngle * (ySta5InIn - halfFuseInIn) +
+          inputGeo['zShearInInSta5']) +
           "{:10.3f}".format(chordSta5InIn) + '\n')
 fin.write('*       X2        Y2        Z2     CORD2\n')
 xSta6InIn = xSta5InIn + (ySta6InIn-ySta5InIn) * \
             math.tan((inputGeo['sweepLeWingInDeg'] + \
-            inputGeo['sweepIncrDegSta5'])*degToRad) 
+            inputGeo['sweepIncrDegSta5']) * degToRad) 
 fin.write("{:10.3f}".format(xSta6InIn) +
           "{:10.3f}".format(ySta6InIn) +
- "{:10.3f}".format(sinDihedralAngle * ySta6InIn + inputGeo['zShearInInSta6']) +
+          "{:10.3f}".format(sinDihedralAngle * (ySta6InIn - halfFuseInIn) +
+          inputGeo['zShearInInSta6']) +
           "{:10.3f}".format(chordSta6InIn) + '\n')
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
 fin.write('        10     15.00      1.00      0.00\n')
@@ -696,88 +702,90 @@ fin.write("{:10.5f}".format(math.tan(inputGeo['incidenceDegSta5'] * degToRad))+
          '         0        0          2         0         0\n')
 fin.write('*\n')
 
-# Horizontal tail panel *** 
-fin.write('*** HORIZONTAL TAIL PANEL ***\n')
-fin.write('*Derived Geometric Data for Horizontal Tail:\n') 
-fin.write('* Span (in):' +
-          "{:15.3f}".format(bHTailInIn) + '\n')
-fin.write('* Root Chord (in):' +
-          "{:9.3f}".format(cRootHTailInIn) + '\n')
-fin.write('* Tip Chord (in):' +
-          "{:10.3f}".format(cTipHTailInIn) + '\n')
-fin.write('* MAC Chord (in):' +
-          "{:10.3f}".format(cMacHTailInIn) + '\n')
-fin.write('* x MRP (in):' +
-          "{:14.3f}".format(xMrpHTailInIn) + '\n')
-fin.write('* y MAC (in):' +
-          "{:14.3f}".format(yMacHTailInIn) + '\n')
-fin.write('* Sweep 1/4C (deg):' +
-          "{:8.3f}".format(sweepQtrChordHTailWingInDeg) + '\n') 
-fin.write('* Tail Volume Coefficient:' +
-          "{:12.5f}".format(hTailVolCoeff) + '\n')
-fin.write('*\n')
-fin.write('*VORLAX inputs for Horizontal Tail:\n')
-fin.write('*       X1        Y1        Z1     CORD1')
-fin.write(' COMMENT: HORIZONTAL TAIL PANEL\n')
-fin.write("{:10.3f}".format(xFuseHTailInIn) +
-          "{:10.3f}".format(ySta1InIn) +
-          "{:10.3f}".format(0) +
-          "{:10.3f}".format(cFuseHTailInIn) + '\n')
-fin.write('*       X2        Y2        Z2     CORD2\n')
-fin.write("{:10.3f}".format(xTipHTailInIn) +
-          "{:10.3f}".format(bOver2HTailInIn) +
-          "{:10.3f}".format(zTipHTailInIn) +
-          "{:10.3f}".format(cTipHTailInIn) + '\n')
-fin.write('*     NVOR      RNCV       SPC       PDL\n')
-fin.write('        10     15.00      1.00      0.00\n')
-fin.write('*    AINC1     AINC2       ITS       NAP    ')
-fin.write('IQUANT     ISYNT       NPP\n')
-fin.write("{:10.5f}".format(math.tan(inputGeo['hTailIncidenceInDeg']*degToRad))+ 
-      "{:10.5f}".format(math.tan(inputGeo['hTailIncidenceInDeg'] * degToRad)) + 
-      '         0        0          2         0         0\n')
-fin.write('*\n')
+# Horizontal tail panel ***
+if inputGeo['isHTailOn'] != 0:
+    fin.write('*** HORIZONTAL TAIL PANEL ***\n')
+    fin.write('*Derived Geometric Data for Horizontal Tail:\n') 
+    fin.write('* Span (in):' +
+              "{:15.3f}".format(bHTailInIn) + '\n')
+    fin.write('* Root Chord (in):' +
+              "{:9.3f}".format(cRootHTailInIn) + '\n')
+    fin.write('* Tip Chord (in):' +
+              "{:10.3f}".format(cTipHTailInIn) + '\n')
+    fin.write('* MAC Chord (in):' +
+              "{:10.3f}".format(cMacHTailInIn) + '\n')
+    fin.write('* x MRP (in):' +
+              "{:14.3f}".format(xMrpHTailInIn) + '\n')
+    fin.write('* y MAC (in):' +
+              "{:14.3f}".format(yMacHTailInIn) + '\n')
+    fin.write('* Sweep 1/4C (deg):' +
+              "{:8.3f}".format(sweepQtrChordHTailWingInDeg) + '\n') 
+    fin.write('* Tail Volume Coefficient:' +
+              "{:12.5f}".format(hTailVolCoeff) + '\n')
+    fin.write('*\n')
+    fin.write('*VORLAX inputs for Horizontal Tail:\n')
+    fin.write('*       X1        Y1        Z1     CORD1')
+    fin.write(' COMMENT: HORIZONTAL TAIL PANEL\n')
+    fin.write("{:10.3f}".format(xFuseHTailInIn) +
+              "{:10.3f}".format(ySta1InIn) +
+              "{:10.3f}".format(0) +
+              "{:10.3f}".format(cFuseHTailInIn) + '\n')
+    fin.write('*       X2        Y2        Z2     CORD2\n')
+    fin.write("{:10.3f}".format(xTipHTailInIn) +
+              "{:10.3f}".format(bOver2HTailInIn) +
+              "{:10.3f}".format(zTipHTailInIn) +
+              "{:10.3f}".format(cTipHTailInIn) + '\n')
+    fin.write('*     NVOR      RNCV       SPC       PDL\n')
+    fin.write('        10     15.00      1.00      0.00\n')
+    fin.write('*    AINC1     AINC2       ITS       NAP    ')
+    fin.write('IQUANT     ISYNT       NPP\n')
+    fin.write("{:10.5f}".format(math.tan(inputGeo['hTailIncidenceInDeg']*degToRad))+ 
+          "{:10.5f}".format(math.tan(inputGeo['hTailIncidenceInDeg'] * degToRad)) + 
+          '         0        0          2         0         0\n')
+    fin.write('*\n')
 
 # Vertical tail panel *** 
-fin.write('*** VERTICAL TAIL PANEL ***\n')
-fin.write('*Derived Geometric Data for Vertical Tail:\n')
-fin.write('* Span (in):' +
-          "{:15.3f}".format(bVTailInIn) + '\n')
-fin.write('* Root Chord (in):' +
-          "{:9.3f}".format(cRootVTailInIn) + '\n')
-fin.write('* Tip Chord (in):' +
-          "{:10.3f}".format(cTipVTailInIn) + '\n')
-fin.write('* MAC Chord (in):' +
-          "{:10.3f}".format(cMacVTailInIn) + '\n')
-fin.write('* x MRP (in):' +
-          "{:14.3f}".format(xMrpVTailInIn) + '\n')
-fin.write('* z MAC (in):' +
-          "{:14.3f}".format(zMacVTailInIn) + '\n')
-fin.write('* Sweep 1/4C (deg):' +
-          "{:8.3f}".format(sweepQtrChordVTailWingInDeg) + '\n')
-fin.write('* Tail Volume Coefficient:' + 
-          "{:12.5f}".format(vTailVolCoeff) + '\n')
-fin.write('*\n')
-fin.write('*VORLAX inputs for Vertical Tail:\n')
-fin.write('*       X1        Y1        Z1     CORD1')
-fin.write(' COMMENT: VERTICAL TAIL PANEL\n')
-fin.write("{:10.3f}".format(inputGeo['xDistVTailBaseInIn']) +
-          "{:10.3f}".format(inputGeo['yDispVTailBaseInIn']) +
-          "{:10.3f}".format(zBaseVTailInIn) +
-          "{:10.3f}".format(cRootVTailInIn) + '\n')
-fin.write('*       X2        Y2        Z2     CORD2\n')
-fin.write("{:10.3f}".format(xTipVTailInIn) +
-          "{:10.3f}".format(yTipVTailInIn) +
-          "{:10.3f}".format(zTipVTailInIn) +
-          "{:10.3f}".format(cTipVTailInIn) + '\n')
-fin.write('*     NVOR      RNCV       SPC       PDL\n')
-fin.write('        10     15.00      1.00      0.00\n')
-fin.write('*    AINC1     AINC2       ITS       NAP    ')
-fin.write('IQUANT     ISYNT       NPP\n')
-fin.write("{:10.5f}".format(0) +
-          "{:10.5f}".format(0) +
-          '         0         0' +
-          "{:10d}".format(iQuantVTail) +
-          '         0         0\n')
+if inputGeo['isVTailOn'] != 0:
+    fin.write('*** VERTICAL TAIL PANEL ***\n')
+    fin.write('*Derived Geometric Data for Vertical Tail:\n')
+    fin.write('* Span (in):' +
+              "{:15.3f}".format(bVTailInIn) + '\n')
+    fin.write('* Root Chord (in):' +
+              "{:9.3f}".format(cRootVTailInIn) + '\n')
+    fin.write('* Tip Chord (in):' +
+              "{:10.3f}".format(cTipVTailInIn) + '\n')
+    fin.write('* MAC Chord (in):' +
+              "{:10.3f}".format(cMacVTailInIn) + '\n')
+    fin.write('* x MRP (in):' +
+              "{:14.3f}".format(xMrpVTailInIn) + '\n')
+    fin.write('* z MAC (in):' +
+              "{:14.3f}".format(zMacVTailInIn) + '\n')
+    fin.write('* Sweep 1/4C (deg):' +
+              "{:8.3f}".format(sweepQtrChordVTailWingInDeg) + '\n')
+    fin.write('* Tail Volume Coefficient:' + 
+              "{:12.5f}".format(vTailVolCoeff) + '\n')
+    fin.write('*\n')
+    fin.write('*VORLAX inputs for Vertical Tail:\n')
+    fin.write('*       X1        Y1        Z1     CORD1')
+    fin.write(' COMMENT: VERTICAL TAIL PANEL\n')
+    fin.write("{:10.3f}".format(inputGeo['xDistVTailBaseInIn']) +
+              "{:10.3f}".format(inputGeo['yDispVTailBaseInIn']) +
+              "{:10.3f}".format(zBaseVTailInIn) +
+              "{:10.3f}".format(cRootVTailInIn) + '\n')
+    fin.write('*       X2        Y2        Z2     CORD2\n')
+    fin.write("{:10.3f}".format(xTipVTailInIn) +
+              "{:10.3f}".format(yTipVTailInIn) +
+              "{:10.3f}".format(zTipVTailInIn) +
+              "{:10.3f}".format(cTipVTailInIn) + '\n')
+    fin.write('*     NVOR      RNCV       SPC       PDL\n')
+    fin.write('        10     15.00      1.00      0.00\n')
+    fin.write('*    AINC1     AINC2       ITS       NAP    ')
+    fin.write('IQUANT     ISYNT       NPP\n')
+    fin.write("{:10.5f}".format(0) +
+              "{:10.5f}".format(0) +
+              '         0         0' +
+              "{:10d}".format(iQuantVTail) +
+              '         0         0\n')
 
 # Stations that define survey grid (0=No survey, not used)
 fin.write('*\n')
