@@ -20,8 +20,8 @@ write/run an AoA, AoS, and Mach sweep of interest.
 
 Likewise, customize as needed to reflect the basic configuration/topology of 
 interest. Customization may entail addition/deletion of surfaces, or 
-modification of existing surfaces. The less adventures may elect to restrict 
-changes to the inputGeo dictionary. In the event that the compuational bits get
+modification of existing surfaces. The less adventurous may elect to restrict 
+changes to the inputGeo dictionary. In the event the computational bits get 
 corrupted, pull a clean copy of the script, and copy/paste the inputGeo 
 dictionary from the corrupted script.
 
@@ -67,7 +67,7 @@ veranautics@gmail.com
 '''
 import math
 # START Changing Inputs Here ***************************
-inputGeo = {'acProject': 'Parametrically Generated 737',
+inputGeo = {'acProject': 'Parametrically Generated Model',
 # WING DEFINITION:
     'sRefInFt2': 1341.15,
     'arWing': 9.45,
@@ -124,7 +124,7 @@ inputGeo = {'acProject': 'Parametrically Generated 737',
     'sweepLeHTailInDeg': 35,
     'dihedralHTailInDeg': 15,
     'xDistHTailApexInIn': 1330,
-    'hTailIncidenceInDeg': 0, # Positive = TE down
+    'hTailIncidenceInDeg': 0, # Positive = TE UP, rotation about LE
     'mrpMacHTailPct': 25,
     # VERTICAL TAIL DEFINITION:
     'isVTailOn': 1, # OFF=0, ON (DORSAL)=1, ON (VENTRAL)=-1
@@ -162,8 +162,8 @@ sweepQtrChordWingInDeg = radToDeg * math.atan((bOver2InIn * \
                          cTipInIn / 4 - cRootInIn / 4) / bOver2InIn)
 yMacInIn = bInIn / 6 * ((1 + 2 * inputGeo['taperWingInDecimal']) / \
                         (1 + inputGeo['taperWingInDecimal']))
-sinDihedralAngle = math.sin(inputGeo['dihedralWingInDeg'] * degToRad)
-zMrpInIn = (yMacInIn - halfFuseInIn) * sinDihedralAngle
+tanDihedralAngle = math.tan(inputGeo['dihedralWingInDeg'] * degToRad)
+zMrpInIn = (yMacInIn - halfFuseInIn) * tanDihedralAngle
 xLeMacInIn = inputGeo['xDistWingApexInIn'] + \
              bOver2InIn * math.tan(inputGeo['sweepLeWingInDeg'] * degToRad) * \
              1 / 3 * (1 + 2 * inputGeo['taperWingInDecimal']) / \
@@ -176,7 +176,7 @@ xWingFuseInIn = inputGeo['xDistWingApexInIn'] + halfFuseInIn * \
                 math.tan(inputGeo['sweepLeWingInDeg'] * degToRad) 
 xTipInIn = inputGeo['xDistWingApexInIn'] + \
            bOver2InIn * math.tan(inputGeo['sweepLeWingInDeg'] * degToRad) 
-zTipInIn = (bOver2InIn - halfFuseInIn) * sinDihedralAngle
+zTipInIn = (bOver2InIn - halfFuseInIn) * tanDihedralAngle
 
 # Determine spanwise location of wing control stations 
 ySta1InIn = inputGeo['bSta1OverHalfSpan'] * bInIn / 2
@@ -200,6 +200,8 @@ chordSta5InIn = (cRootInIn - inputGeo['bSta5OverHalfSpan'] * \
 chordSta6InIn = cTipInIn * inputGeo['ratioCSta6OverCtrap'] 
 
 # Determine horizontal tail characteristics
+tanHTailDihedralAngle = math.tan(inputGeo['dihedralHTailInDeg'] * degToRad)
+tanHTailIncidence = math.tan(inputGeo['hTailIncidenceInDeg'] * degToRad)
 sRefHTailInIn2 = 144 * inputGeo['sRefHTailInFt2'] 
 bHTailInIn = (sRefHTailInIn2 * inputGeo['arHTail'])**0.5 
 bOver2HTailInIn = bHTailInIn / 2
@@ -214,8 +216,7 @@ sweepQtrChordHTailWingInDeg = radToDeg * math.atan((bOver2HTailInIn * \
                      cTipHTailInIn / 4 - cRootHTailInIn / 4) / bOver2HTailInIn)
 yMacHTailInIn = bHTailInIn / 6 * ((1 + 2 * inputGeo['taperHTailInDecimal']) / \
                 (1 + inputGeo['taperHTailInDecimal'])) 
-zMrpHTailInIn = (yMacHTailInIn - halfFuseInIn) * \
-                math.sin(inputGeo['dihedralHTailInDeg'] * degToRad) 
+zMrpHTailInIn = (yMacHTailInIn - halfFuseInIn) * tanHTailDihedralAngle
 xLeMacHTailInIn = inputGeo['xDistHTailApexInIn'] + \
               bOver2HTailInIn * math.tan(inputGeo['sweepLeHTailInDeg'] * \
               degToRad) * 1 / 3 * (1 + 2 * inputGeo['taperHTailInDecimal']) / \
@@ -228,8 +229,7 @@ xFuseHTailInIn = inputGeo['xDistHTailApexInIn'] + halfFuseInIn * \
                  math.tan(inputGeo['sweepLeHTailInDeg'] * degToRad) 
 xTipHTailInIn = inputGeo['xDistHTailApexInIn'] + \
            bOver2HTailInIn * math.tan(inputGeo['sweepLeHTailInDeg'] * degToRad) 
-zTipHTailInIn = (bOver2HTailInIn - halfFuseInIn) * \
-                math.sin(inputGeo['dihedralHTailInDeg'] * degToRad) 
+zTipHTailInIn = (bOver2HTailInIn - halfFuseInIn) * tanHTailDihedralAngle
 hTailVolCoeff = (xMrpHTailInIn - xMrpInIn) * sRefHTailInIn2 / \
                 (cMacInIn * sRefInIn2)
 
@@ -357,7 +357,7 @@ fin.write('* sweepIncrDegSta5: ' + \
           ' #Increment in sweep, station 5 to 6\n')
 fin.write('*\n')
 
-fin.write('*Incidence at control stations - positive = wash-IN (TE down):\n')
+fin.write('*Incidence at control stations - positive = wash-OUT (TE up):\n')
 fin.write('* incidenceDegSta1: ' + \
           "{:10.3f}".format(inputGeo['incidenceDegSta1']) + \
           ' #Incidence at station 1\n')
@@ -577,7 +577,7 @@ fin.write('*       X1        Y1        Z1     CORD1')
 fin.write(' COMMENT: INBOARD-MOST WING PANEL\n')            
 fin.write("{:10.3f}".format(xWingFuseInIn) +
           "{:10.3f}".format(ySta1InIn) +
-          "{:10.3f}".format(sinDihedralAngle * (ySta1InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta1InIn - halfFuseInIn) + 
           inputGeo['zShearInInSta1']) +
           "{:10.3f}".format(chordSta1InIn) + '\n')
 fin.write('*       X2        Y2        Z2     CORD2\n')
@@ -586,7 +586,7 @@ xSta2InIn = xWingFuseInIn + (ySta2InIn - ySta1InIn) * \
             inputGeo['sweepIncrDegSta1']) * degToRad)
 fin.write("{:10.3f}".format(xSta2InIn) +
           "{:10.3f}".format(ySta2InIn) +
-          "{:10.3f}".format(sinDihedralAngle * (ySta2InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta2InIn - halfFuseInIn) + 
           inputGeo['zShearInInSta2']) +
           "{:10.3f}".format(chordSta2InIn) + '\n')
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
@@ -603,7 +603,7 @@ fin.write('*       X1        Y1        Z1     CORD1')
 fin.write(' COMMENT: SECOND INBOARD WING PANEL\n') 
 fin.write("{:10.3f}".format(xSta2InIn) +
           "{:10.3f}".format(ySta2InIn) +
-          "{:10.3f}".format(sinDihedralAngle * (ySta2InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta2InIn - halfFuseInIn) + 
           inputGeo['zShearInInSta2']) +
           "{:10.3f}".format(chordSta2InIn) + '\n') 
 fin.write('*       X2        Y2        Z2     CORD2\n')
@@ -612,7 +612,7 @@ xSta3InIn = xSta2InIn + (ySta3InIn - ySta2InIn) * \
             inputGeo['sweepIncrDegSta2']) * degToRad)
 fin.write("{:10.3f}".format(xSta3InIn) + \
           "{:10.3f}".format(ySta3InIn) +
-          "{:10.3f}".format(sinDihedralAngle * (ySta3InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta3InIn - halfFuseInIn) + 
           inputGeo['zShearInInSta3']) +
           "{:10.3f}".format(chordSta3InIn) + '\n') 
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
@@ -629,7 +629,7 @@ fin.write('*       X1        Y1        Z1     CORD1')
 fin.write(' COMMENT: MIDDLE WING PANEL\n') 
 fin.write("{:10.3f}".format(xSta3InIn) +
           "{:10.3f}".format(ySta3InIn) +
-          "{:10.3f}".format(sinDihedralAngle * (ySta3InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta3InIn - halfFuseInIn) + 
           inputGeo['zShearInInSta3']) +
           "{:10.3f}".format(chordSta3InIn) + '\n')
 fin.write('*       X2        Y2        Z2     CORD2\n')
@@ -638,7 +638,7 @@ xSta4InIn = xSta3InIn + (ySta4InIn - ySta3InIn) * \
             inputGeo['sweepIncrDegSta3']) * degToRad)
 fin.write("{:10.3f}".format(xSta4InIn) +
           "{:10.3f}".format(ySta4InIn) +
-          "{:10.3f}".format(sinDihedralAngle * (ySta4InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta4InIn - halfFuseInIn) + 
           inputGeo['zShearInInSta4']) +
           "{:10.3f}" .format(chordSta4InIn) + '\n') 
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
@@ -655,7 +655,7 @@ fin.write('*       X1        Y1        Z1     CORD1')
 fin.write(' COMMENT: SECOND-MOST OUTBOARD WING PANEL\n') 
 fin.write("{:10.3f}".format(xSta4InIn) +
           "{:10.3f}".format(ySta4InIn) +
-          "{:10.3f}".format(sinDihedralAngle * (ySta4InIn - halfFuseInIn) +
+          "{:10.3f}".format(tanDihedralAngle * (ySta4InIn - halfFuseInIn) +
           inputGeo['zShearInInSta4']) +
           "{:10.3f}".format(chordSta4InIn) + '\n') 
 fin.write('*       X2        Y2        Z2     CORD2\n')
@@ -664,7 +664,7 @@ math.tan((inputGeo['sweepLeWingInDeg'] + \
           inputGeo['sweepIncrDegSta4']) * degToRad) 
 fin.write("{:10.3f}".format(xSta5InIn) +
           "{:10.3f}".format(ySta5InIn) +
-          "{:10.3f}".format(sinDihedralAngle * (ySta5InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta5InIn - halfFuseInIn) + 
           inputGeo['zShearInInSta5']) +
           "{:10.3f}".format(chordSta5InIn) + '\n')
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
@@ -681,7 +681,7 @@ fin.write('*       X1        Y1        Z1     CORD1')
 fin.write(' COMMENT: MOST OUTBOARD WING PANEL\n') 
 fin.write("{:10.3f}".format(xSta5InIn) +
           "{:10.3f}".format(ySta5InIn) +
-          "{:10.3f}".format(sinDihedralAngle * (ySta5InIn - halfFuseInIn) +
+          "{:10.3f}".format(tanDihedralAngle * (ySta5InIn - halfFuseInIn) +
           inputGeo['zShearInInSta5']) +
           "{:10.3f}".format(chordSta5InIn) + '\n')
 fin.write('*       X2        Y2        Z2     CORD2\n')
@@ -690,7 +690,7 @@ xSta6InIn = xSta5InIn + (ySta6InIn-ySta5InIn) * \
             inputGeo['sweepIncrDegSta5']) * degToRad) 
 fin.write("{:10.3f}".format(xSta6InIn) +
           "{:10.3f}".format(ySta6InIn) +
-          "{:10.3f}".format(sinDihedralAngle * (ySta6InIn - halfFuseInIn) +
+          "{:10.3f}".format(tanDihedralAngle * (ySta6InIn - halfFuseInIn) +
           inputGeo['zShearInInSta6']) +
           "{:10.3f}".format(chordSta6InIn) + '\n')
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
@@ -739,8 +739,8 @@ if inputGeo['isHTailOn'] != 0:
     fin.write('        10     15.00      1.00      0.00\n')
     fin.write('*    AINC1     AINC2       ITS       NAP    ')
     fin.write('IQUANT     ISYNT       NPP\n')
-    fin.write("{:10.5f}".format(math.tan(inputGeo['hTailIncidenceInDeg']*degToRad))+ 
-          "{:10.5f}".format(math.tan(inputGeo['hTailIncidenceInDeg'] * degToRad)) + 
+    fin.write("{:10.5f}".format(tanHTailIncidence) + 
+          "{:10.5f}".format(tanHTailIncidence) + 
           '         0        0          2         0         0\n')
     fin.write('*\n')
 
