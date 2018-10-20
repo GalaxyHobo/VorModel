@@ -148,6 +148,8 @@ radToDeg = 180 / math.pi
 degToRad = 1 / radToDeg
 
 # Determine wing characteristics 
+tanDihedralAngle = math.tan(inputGeo['dihedralWingInDeg'] * degToRad)
+tanSweepLeWing = math.tan(inputGeo['sweepLeWingInDeg'] * degToRad)
 sRefInIn2 = 144 * inputGeo['sRefInFt2']
 bInIn = (sRefInIn2 * inputGeo['arWing'])**0.5
 bOver2InIn = bInIn / 2
@@ -157,25 +159,19 @@ cMacInIn = 2 / 3 * cRootInIn * (1 + inputGeo['taperWingInDecimal'] + \
                                 inputGeo['taperWingInDecimal']**2) / \
                                 (1 + inputGeo['taperWingInDecimal']) 
 cTipInIn = cRootInIn * inputGeo['taperWingInDecimal']
-sweepQtrChordWingInDeg = radToDeg * math.atan((bOver2InIn * \
-                         math.tan(inputGeo['sweepLeWingInDeg'] * degToRad) + \
+sweepQtrChordWingInDeg = radToDeg * math.atan((bOver2InIn * tanSweepLeWing + \
                          cTipInIn / 4 - cRootInIn / 4) / bOver2InIn)
 yMacInIn = bInIn / 6 * ((1 + 2 * inputGeo['taperWingInDecimal']) / \
                         (1 + inputGeo['taperWingInDecimal']))
-tanDihedralAngle = math.tan(inputGeo['dihedralWingInDeg'] * degToRad)
 zMrpInIn = (yMacInIn - halfFuseInIn) * tanDihedralAngle
-xLeMacInIn = inputGeo['xDistWingApexInIn'] + \
-             bOver2InIn * math.tan(inputGeo['sweepLeWingInDeg'] * degToRad) * \
+xLeMacInIn = inputGeo['xDistWingApexInIn'] + bOver2InIn * tanSweepLeWing * \
              1 / 3 * (1 + 2 * inputGeo['taperWingInDecimal']) / \
              (1 + inputGeo['taperWingInDecimal']) 
-xMrpInIn = xLeMacInIn + \
-           cMacInIn * inputGeo['mrpMacPct'] / 100 
+xMrpInIn = xLeMacInIn + cMacInIn * inputGeo['mrpMacPct'] / 100 
 cWingFuseInIn = cRootInIn - \
                 inputGeo['bSta1OverHalfSpan'] * (cRootInIn - cTipInIn) 
-xWingFuseInIn = inputGeo['xDistWingApexInIn'] + halfFuseInIn * \
-                math.tan(inputGeo['sweepLeWingInDeg'] * degToRad) 
-xTipInIn = inputGeo['xDistWingApexInIn'] + \
-           bOver2InIn * math.tan(inputGeo['sweepLeWingInDeg'] * degToRad) 
+xWingFuseInIn = inputGeo['xDistWingApexInIn'] + halfFuseInIn * tanSweepLeWing 
+xTipInIn = inputGeo['xDistWingApexInIn'] + bOver2InIn * tanSweepLeWing 
 zTipInIn = (bOver2InIn - halfFuseInIn) * tanDihedralAngle
 
 # Determine spanwise location of wing control stations 
@@ -203,6 +199,7 @@ chordSta6InIn = cTipInIn * inputGeo['ratioCSta6OverCtrap']
 tanHTailDihedralAngle = math.tan(inputGeo['dihedralHTailInDeg'] * degToRad)
 tanHTailIncidence = math.tan(inputGeo['hTailIncidenceInDeg'] * degToRad)
 cosHTailIncidence = math.cos(inputGeo['hTailIncidenceInDeg'] * degToRad)
+tanSweepLeHTail = math.tan(inputGeo['sweepLeHTailInDeg'] * degToRad)
 sRefHTailInIn2 = 144 * inputGeo['sRefHTailInFt2'] 
 bHTailInIn = (sRefHTailInIn2 * inputGeo['arHTail'])**0.5 
 bOver2HTailInIn = bHTailInIn / 2
@@ -213,28 +210,27 @@ cMacHTailInIn = 2 / 3 * cRootHTailInIn * (1 + inputGeo['taperHTailInDecimal'] \
                 (1 + inputGeo['taperHTailInDecimal']) 
 cTipHTailInIn = cRootHTailInIn * inputGeo['taperHTailInDecimal'] 
 sweepQtrChordHTailWingInDeg = radToDeg * math.atan((bOver2HTailInIn * \
-                     math.tan(inputGeo['sweepLeHTailInDeg'] * degToRad) + \
-                     cTipHTailInIn / 4 - cRootHTailInIn / 4) / bOver2HTailInIn)
+   tanSweepLeHTail + cTipHTailInIn / 4 - cRootHTailInIn / 4) / bOver2HTailInIn)
 yMacHTailInIn = bHTailInIn / 6 * ((1 + 2 * inputGeo['taperHTailInDecimal']) / \
                 (1 + inputGeo['taperHTailInDecimal'])) 
 zMrpHTailInIn = (yMacHTailInIn - halfFuseInIn) * tanHTailDihedralAngle
-xLeMacHTailInIn = inputGeo['xDistHTailApexInIn'] + \
-              bOver2HTailInIn * math.tan(inputGeo['sweepLeHTailInDeg'] * \
-              degToRad) * 1 / 3 * (1 + 2 * inputGeo['taperHTailInDecimal']) / \
-              (1 + inputGeo['taperHTailInDecimal']) 
+xLeMacHTailInIn = inputGeo['xDistHTailApexInIn'] + bOver2HTailInIn * \
+        tanSweepLeHTail * 1 / 3 * (1 + 2 * inputGeo['taperHTailInDecimal']) / \
+        (1 + inputGeo['taperHTailInDecimal']) 
 xMrpHTailInIn = xLeMacHTailInIn + \
                 cMacHTailInIn * inputGeo['mrpMacHTailPct'] / 100 
 cFuseHTailInIn = cRootHTailInIn - inputGeo['bSta1OverHalfSpan'] * \
                 bOver2InIn / bOver2HTailInIn * (cRootHTailInIn - cTipHTailInIn) 
 xFuseHTailInIn = inputGeo['xDistHTailApexInIn'] + halfFuseInIn * \
-                 math.tan(inputGeo['sweepLeHTailInDeg'] * degToRad) 
+                 tanSweepLeHTail 
 xTipHTailInIn = inputGeo['xDistHTailApexInIn'] + \
-           bOver2HTailInIn * math.tan(inputGeo['sweepLeHTailInDeg'] * degToRad) 
+                bOver2HTailInIn * tanSweepLeHTail 
 zTipHTailInIn = (bOver2HTailInIn - halfFuseInIn) * tanHTailDihedralAngle
 hTailVolCoeff = (xMrpHTailInIn - xMrpInIn) * sRefHTailInIn2 / \
                 (cMacInIn * sRefInIn2)
 
 # Determine vertical tail characteristics 
+tanSweepLeVTail = math.tan(inputGeo['sweepLeVTailInDeg'] * degToRad)
 sRefVTailInIn2 = 144 * inputGeo['sRefVTailInFt2'] 
 bVTailInIn = (sRefVTailInIn2 * inputGeo['arVTail'])**0.5 
 cRootVTailInIn = 2 * sRefVTailInIn2 / bVTailInIn / \
@@ -245,18 +241,17 @@ cMacVTailInIn = 2 / 3 * cRootVTailInIn * \
                 (1 + inputGeo['taperVTailInDecimal'])
 cTipVTailInIn = cRootVTailInIn * inputGeo['taperVTailInDecimal'] 
 sweepQtrChordVTailWingInDeg = radToDeg * math.atan((bVTailInIn * \
-                        math.tan(inputGeo['sweepLeVTailInDeg'] * degToRad) + \
+                        tanSweepLeVTail + \
                         cTipVTailInIn / 4 - cRootVTailInIn / 4) / bVTailInIn)
 zMacVTailInIn = bVTailInIn / 3 * ((1 + 2 * inputGeo['taperVTailInDecimal']) / \
                 (1 + inputGeo['taperVTailInDecimal'])) 
-xLeMacVTailInIn = inputGeo['xDistVTailBaseInIn'] + \
-              bVTailInIn * math.tan(inputGeo['sweepLeVTailInDeg'] * \
-              degToRad) * 1 / 3 * (1 + 2 * inputGeo['taperVTailInDecimal']) / \
+xLeMacVTailInIn = inputGeo['xDistVTailBaseInIn'] + bVTailInIn * \
+        tanSweepLeVTail * 1 / 3 * (1 + 2 * inputGeo['taperVTailInDecimal']) / \
               (1 + inputGeo['taperVTailInDecimal']) 
 xMrpVTailInIn = xLeMacVTailInIn + \
                 cMacVTailInIn * inputGeo['mrpMacVTailPct'] / 100 
 xTipVTailInIn = inputGeo['xDistVTailBaseInIn'] + \
-                bVTailInIn * math.tan(inputGeo['sweepLeVTailInDeg'] * degToRad) 
+                bVTailInIn * tanSweepLeVTail 
 yTipVTailInIn = inputGeo['yDispVTailBaseInIn'] + \
                 bVTailInIn * math.tan(inputGeo['tiltVTailInDeg'] * degToRad) 
 vTailVolCoeff = (xMrpVTailInIn - xMrpInIn) * sRefVTailInIn2 / \
