@@ -202,6 +202,7 @@ chordSta6InIn = cTipInIn * inputGeo['ratioCSta6OverCtrap']
 # Determine horizontal tail characteristics
 tanHTailDihedralAngle = math.tan(inputGeo['dihedralHTailInDeg'] * degToRad)
 tanHTailIncidence = math.tan(inputGeo['hTailIncidenceInDeg'] * degToRad)
+cosHTailIncidence = math.cos(inputGeo['hTailIncidenceInDeg'] * degToRad)
 sRefHTailInIn2 = 144 * inputGeo['sRefHTailInFt2'] 
 bHTailInIn = (sRefHTailInIn2 * inputGeo['arHTail'])**0.5 
 bOver2HTailInIn = bHTailInIn / 2
@@ -729,12 +730,12 @@ if inputGeo['isHTailOn'] != 0:
     fin.write("{:10.3f}".format(xFuseHTailInIn) +
               "{:10.3f}".format(ySta1InIn) +
               "{:10.3f}".format(0) +
-              "{:10.3f}".format(cFuseHTailInIn) + '\n')
+              "{:10.3f}".format(cFuseHTailInIn * cosHTailIncidence) + '\n')
     fin.write('*       X2        Y2        Z2     CORD2\n')
     fin.write("{:10.3f}".format(xTipHTailInIn) +
               "{:10.3f}".format(bOver2HTailInIn) +
               "{:10.3f}".format(zTipHTailInIn) +
-              "{:10.3f}".format(cTipHTailInIn) + '\n')
+              "{:10.3f}".format(cTipHTailInIn * cosHTailIncidence) + '\n')
     fin.write('*     NVOR      RNCV       SPC       PDL\n')
     fin.write('        10     15.00      1.00      0.00\n')
     fin.write('*    AINC1     AINC2       ITS       NAP    ')
