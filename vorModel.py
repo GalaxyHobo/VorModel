@@ -69,7 +69,7 @@ inputGeo = {'acProject': 'Parametric_Discoidal_Wing',
     'tailSideAngle': 60.0,
     'widthFuseInIn': 3.08,
     # HORIZONTAL TAIL (AILEVATOR) DEFINITION:
-    'isHTailOn': 1, # 0 = off, 1 = collective deflection, -1 = asymmetric deflection
+    'isHTailOn': -1, # 0 = off, 1 = collective deflection, -1 = asymmetric deflection
     'sRefHTailInFt2': .5,
     'arHTail': 5,
     'taperHTailInDecimal': 0.5,
@@ -194,7 +194,7 @@ zMacVTailInIn = bVTailInIn / 3 * ((1 + 2 * inputGeo['taperVTailInDecimal']) / \
 xLeMacVTailInIn = inputGeo['xDistVTailBaseInIn']+bVTailInIn*tanSweepLeVTail * \
               1 / 3 * (1 + 2 * inputGeo['taperVTailInDecimal']) / \
               (1 + inputGeo['taperVTailInDecimal']) 
-xMrpVTailInIn = xLeMacVTailInIn + cMacVTailInIn*inputGeo['mrpMacVTailPct']/100 
+xMrpVTailInIn = xLeMacVTailInIn + cMacVTailInIn*inputGeo['mrpMacVTailPct'] /100 
 # Slave to second wing station
 yBaseVTailInIn = ySta3InIn
 yTipVTailInIn = yBaseVTailInIn + \
@@ -295,7 +295,7 @@ fin.write('* sweepIncrDegSta5: ' + \
           ' #Increment in sweep, station 5 to 6\n')
 fin.write('*\n')
 
-fin.write('*Incidence at control stations - positive = wash-IN (TE down):\n')
+fin.write('*Incidence at control stations - positive = wash-OUT (TE UP):\n')
 fin.write('* incidenceDegSta1: ' + \
           "{:10.3f}".format(inputGeo['incidenceDegSta1']) + \
           ' #Incidence at station 1\n')
@@ -514,7 +514,7 @@ fin.write("{:10.3f}".format(xSta1InIn) +
 fin.write('*       X2        Y2        Z2     CORD2\n')
 xSta2InIn = xSta1InIn + (ySta2InIn-ySta1InIn) * \
             math.tan((inputGeo['sweepLeWingInDeg'] + \
-            inputGeo['sweepIncrDegSta1'])*degToRad)    
+            inputGeo['sweepIncrDegSta1']) * degToRad)    
 mainChordSta2InIn = mainChordSta1InIn - xSta2InIn
 fin.write("{:10.3f}".format(xSta2InIn) +
           "{:10.3f}".format(ySta2InIn) +
@@ -539,7 +539,7 @@ fin.write("{:10.3f}".format(xSta2InIn) +
 fin.write('*       X2        Y2        Z2     CORD2\n')
 xSta3InIn = xSta2InIn + (ySta3InIn-ySta2InIn) * \
             math.tan((inputGeo['sweepLeWingInDeg'] + \
-            inputGeo['sweepIncrDegSta2'])*degToRad)
+            inputGeo['sweepIncrDegSta2']) * degToRad)
 mainChordSta3InIn = mainChordSta1InIn - xSta3InIn    
 fin.write("{:10.3f}".format(xSta3InIn) + \
           "{:10.3f}".format(ySta3InIn) +
@@ -564,7 +564,7 @@ fin.write("{:10.3f}".format(xSta3InIn) +
 fin.write('*       X2        Y2        Z2     CORD2\n')
 xSta4InIn = xSta3InIn + (ySta4InIn-ySta3InIn) * \
             math.tan((inputGeo['sweepLeWingInDeg'] + \
-            inputGeo['sweepIncrDegSta3'])*degToRad)
+            inputGeo['sweepIncrDegSta3']) * degToRad)
 #fin.write("{:10.3f}".format(xSta4InIn) +
 #          "{:10.3f}".format(ySta4InIn) +
 # "{:10.3f}".format(tanDihedralAngle * ySta4InIn + inputGeo['zShearInInSta4']) +
@@ -592,7 +592,7 @@ fin.write("{:10.3f}".format(xSta4InIn) +
 fin.write('*       X2        Y2        Z2     CORD2\n')
 xSta5InIn = xSta4InIn + (ySta5InIn-ySta4InIn) * \
 math.tan((inputGeo['sweepLeWingInDeg'] + \
-          inputGeo['sweepIncrDegSta4'])*degToRad) 
+          inputGeo['sweepIncrDegSta4']) * degToRad) 
 fin.write("{:10.3f}".format(xSta5InIn) +
           "{:10.3f}".format(ySta5InIn) +
  "{:10.3f}".format(tanDihedralWing * ySta5InIn + inputGeo['zShearInInSta5']) +
@@ -616,7 +616,7 @@ fin.write("{:10.3f}".format(xSta5InIn) +
 fin.write('*       X2        Y2        Z2     CORD2\n')
 xSta6InIn = xSta5InIn + (ySta6InIn-ySta5InIn) * \
             math.tan((inputGeo['sweepLeWingInDeg'] + \
-            inputGeo['sweepIncrDegSta5'])*degToRad) 
+            inputGeo['sweepIncrDegSta5']) * degToRad) 
 fin.write("{:10.3f}".format(xSta6InIn) +
           "{:10.3f}".format(ySta6InIn) +
  "{:10.3f}".format(tanDihedralWing * ySta6InIn + inputGeo['zShearInInSta6']) +
@@ -718,8 +718,8 @@ if inputGeo['isHTailOn'] != 0:
     fin.write('        10     15.00      1.00      0.00\n')
     fin.write('*    AINC1     AINC2       ITS       NAP    ')
     fin.write('IQUANT     ISYNT       NPP\n')
-    fin.write("{:10.5f}".format(inputGeo['isHTailOn'] * tanHTailIncidence)+ 
-          "{:10.5f}".format(inputGeo['isHTailOn'] * tanHTailIncidence) + 
+    fin.write("{:10.5f}".format(-1 * inputGeo['isHTailOn'] * tanHTailIncidence) + 
+          "{:10.5f}".format(-1 * inputGeo['isHTailOn'] * tanHTailIncidence) + 
           '         0        0          1         0         0\n')
     fin.write('*\n')
 
