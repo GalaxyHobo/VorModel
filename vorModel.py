@@ -3,7 +3,7 @@ VorModel
 
 Creates a VORLAX input file based on parametric inputs...
 
-Version for Discoidal wing, a-la Vought XF5U and V-173
+Version for Discoidal wing, a-la Vought XF5U and V-173.
 
 Wing definition with six control stations. Sweep and camber can vary between 
 control stations.
@@ -11,6 +11,13 @@ control stations.
 Customize as needed to reflect the basic configuration of interest.
 Customization may entail addition/deletion of surfaces, or modification of
 existing surfaces. 
+
+Note! Reads path to Vorlax .exe in "path.txt" file that must reside
+in same directory as vorModel.py. The path in that file must be on the 
+first line and begin with drive letter + colon, or "\". and must point
+to directory with Vorlax executable. Will write input file there. 
+Assumes C-drive if path begins with "\".
+
 '''
 import math
 # START Changing Inputs Here ***************************
@@ -23,10 +30,10 @@ inputGeo = {'acProject': 'Parametric_Discoidal_Wing',
     'dihedralWingInDeg': 0,
     'xDistWingApexInIn': 0,
     'mrpMacPct': 15,
-    #"Swinglet"
-    'spanSwingletInIn': 6.16,
-    'chordSwingletInIn': 5.9,
-    'swingletIncidenceDeg': 0,
+    #"TIP"
+    'spanTipInIn': 6.25,
+    'chordTipInIn': 4,
+    'tipIncidenceDeg': 0,
     # Spanwise location of wing control stations
     'bSta1OverHalfSpan': 0.0, # Spanwise Location of station #1 as fraction of half span (width of fuse)
     'bSta2OverHalfSpan': 0.309, # Spanwise location of station #2 as fraction of half span 
@@ -60,22 +67,22 @@ inputGeo = {'acProject': 'Parametric_Discoidal_Wing',
     'zShearInInSta4': 0, # Vertical displacement above dihedral line at station #4
     'zShearInInSta5': 0, # Vertical displacement above dihedral line at station #5
     'zShearInInSta6': 0, # Vertical displacement above dihedral line at station #6
-    # FUSELAGE DEFINITION:
-    'lengthFuseInIn': 30.03,
-    'heightFuseInIn': 3.08,
-    'noseTopAngle': 25.0,
-    'noseSideAngle': 25.0,
-    'tailTopAngle': 60.0,
-    'tailSideAngle': 60.0,
-    'widthFuseInIn': 3.08,
+    # FUSELAGE DEFINITION: NOTE! NOT USED IN CURRENT MODEL!
+#    'lengthFuseInIn': 30.03,
+#    'heightFuseInIn': 3.08,
+#    'noseTopAngle': 25.0,
+#    'noseSideAngle': 25.0,
+#    'tailTopAngle': 60.0,
+#    'tailSideAngle': 60.0,
+#    'widthFuseInIn': 3.08,
     # HORIZONTAL TAIL (AILEVATOR) DEFINITION:
     'isHTailOn': -1, # 0 = off, 1 = collective deflection, -1 = asymmetric deflection
-    'sRefHTailInFt2': .5,
-    'arHTail': 5,
-    'taperHTailInDecimal': 0.5,
+    'sRefHTailInFt2': 0.3,
+    'arHTail': 1.1,
+    'taperHTailInDecimal': 0.8,
     'sweepLeHTailInDeg': 0,
     'dihedralHTailInDeg': 0,
-    'hTailIncidenceInDeg': 10, # Positive = TE UP on RIGHT SIDE
+    'hTailIncidenceInDeg': 0, # Positive = TE UP on RIGHT SIDE
     'mrpMacHTailPct': 25,
     # VERTICAL TAIL DEFINITION:
     'isVTailOn': 1, # OFF=0, ON (DORSAL)=1, ON (VENTRAL)=-1
@@ -87,14 +94,15 @@ inputGeo = {'acProject': 'Parametric_Discoidal_Wing',
     'xDistVTailBaseInIn': 1,
     'mrpMacVTailPct': 25,
     # ELEVATOR
-    'fracRootElevatorBreak': 0.8,
+    'fracRootElevatorBreak': 0.75,
     'elevDeflectionInDeg': 0, # Positive = TE UP
-    'zElevOffset': .25, # Needed to enable convergence
+    'zElevOffset': 0.1, # Needed to enable convergence
 # (ADD EXTRA COMPONENTS AS NEEDED)
 }
-# Establish working directory with exe ...
-# Copy & paste absolute path on local machine here within double quotes 
-userExePath = "C:\AeroProgs\Vorlax\VORLAX"
+# Read path to working directory
+fout = open("path.txt", 'r')
+userExePath=fout.readline()
+fout.close()
 
 # STOP Changing Inputs Here ************************
 # Useful degree conversions
@@ -337,24 +345,24 @@ fin.write('* zShearInInSta6: ' + \
           ' #Vertical displacement at station 6\n')
 fin.write('*\n')
 
-fin.write('*** FUSELAGE ***\n') 
-fin.write('* heightFuseInIn: ' + \
-          "{:10.3f}".format(inputGeo['heightFuseInIn']) + '\n') 
-fin.write('* lengthFuseInIn: ' + \
-          "{:10.3f}".format(inputGeo['lengthFuseInIn']) + '\n') 
-fin.write('* noseTopAngle: ' + \
-          "{:12.3f}".format(inputGeo['noseTopAngle']) + '\n')
-fin.write('* noseSideAngle: ' + \
-          "{:11.3f}".format(inputGeo['noseSideAngle']) + ' \n')
-fin.write('* tailTopAngle: ' + \
-          "{:12.3f}".format(inputGeo['tailTopAngle']) + '\n')
-fin.write('* tailSideAngle: ' + \
-          "{:11.3f}".format(inputGeo['tailSideAngle']) + '\n')
-fin.write('*\n')
+#fin.write('*** FUSELAGE ***\n') 
+#fin.write('* heightFuseInIn: ' + \
+#          "{:10.3f}".format(inputGeo['heightFuseInIn']) + '\n') 
+#fin.write('* lengthFuseInIn: ' + \
+#          "{:10.3f}".format(inputGeo['lengthFuseInIn']) + '\n') 
+#fin.write('* noseTopAngle: ' + \
+#          "{:12.3f}".format(inputGeo['noseTopAngle']) + '\n')
+#fin.write('* noseSideAngle: ' + \
+#          "{:11.3f}".format(inputGeo['noseSideAngle']) + ' \n')
+#fin.write('* tailTopAngle: ' + \
+#          "{:12.3f}".format(inputGeo['tailTopAngle']) + '\n')
+#fin.write('* tailSideAngle: ' + \
+#          "{:11.3f}".format(inputGeo['tailSideAngle']) + '\n')
+#fin.write('*\n')
 
-fin.write('*** HORIZONTAL TAIL ***\n')
+fin.write('*** HORIZONTAL TAIL/AILEVATORS ***\n')
 fin.write('* isHTailOn: ' + \
-          "{:19d}".format(inputGeo['isHTailOn']) + ' # OFF=0; ON=1\n')
+          "{:19d}".format(inputGeo['isHTailOn']) + ' # OFF=0; ON/COLLECTIVE=1; ON/ASYMMETRIC=2\n')
 fin.write('* mrpMacHTailPct: ' + \
           "{:14.3f}".format(inputGeo['mrpMacHTailPct']) + '\n')
 fin.write('* sRefHTailInFt2: ' + \
@@ -413,7 +421,7 @@ fin.write('     1           0.1\n')
 fin.write('*NALPHA        ALPHA\n')
 fin.write('    16           -2. -1. 0. 1. 2. 3. 4. 6. 8. 10. 12. 14. 16. 18. 20. 22.\n')
 #fin.write('    13           13. 14. 15. 16. 17. 18. 19. 20. 21. 22. 23. 24. 25.\n')
-
+#fin.write('     1            0.\n')
 fin.write('*    LATRL       PSI    PITCHQ     ROLLQ      YAWQ      VINF\n')
 fin.write('         0      0.00      0.00      0.00      0.00       1.0\n')
 
@@ -630,24 +638,24 @@ fin.write("{:10.5f}".format(math.tan(inputGeo['incidenceDegSta5'] * degToRad))+
          '         0        0          2         0         0\n')
 fin.write('*\n')
 
-## Swinglet panel ***
+## Tip Panel ***
 #fin.write('*       X1        Y1        Z1     CORD1')
-#fin.write(' COMMENT: SWINGLET\n') 
+#fin.write(' COMMENT: TIP\n') 
 #fin.write("{:10.3f}".format(xSta6InIn) +
 #          "{:10.3f}".format(ySta6InIn) +
-# "{:10.3f}".format(tanDihedralAngle * ySta6InIn + inputGeo['zShearInInSta6']) +
-#          "{:10.3f}".format(inputGeo['chordSwingletInIn']) + '\n')
+# "{:10.3f}".format(tanDihedralWing * ySta6InIn + inputGeo['zShearInInSta6']) +
+#          "{:10.3f}".format(inputGeo['chordTipInIn']) + '\n')
 #fin.write('*       X2        Y2        Z2     CORD2\n')
 #fin.write("{:10.3f}".format(xSta6InIn) +
-#          "{:10.3f}".format(ySta6InIn+inputGeo['spanSwingletInIn']) +
-# "{:10.3f}".format(tanDihedralAngle * ySta6InIn + inputGeo['zShearInInSta6']) +
-#          "{:10.3f}".format(inputGeo['chordSwingletInIn']) + '\n')
+#          "{:10.3f}".format(ySta6InIn+inputGeo['spanTipInIn']) +
+# "{:10.3f}".format(tanDihedralWing * ySta6InIn + inputGeo['zShearInInSta6']) +
+#          "{:10.3f}".format(inputGeo['chordTipInIn']) + '\n')
 #fin.write('*     NVOR      RNCV       SPC       PDL\n')
 #fin.write('        10     15.00      1.00      0.00\n')
 #fin.write('*    AINC1     AINC2       ITS       NAP    ')
 #fin.write('IQUANT     ISYNT       NPP\n')
-#fin.write("{:10.5f}".format(math.tan(inputGeo['swingletIncidenceDeg'] * degToRad))+ 
-#         "{:10.5f}".format(math.tan(inputGeo['swingletIncidenceDeg'] * degToRad)) + 
+#fin.write("{:10.5f}".format(math.tan(inputGeo['tipIncidenceDeg'] * degToRad))+ 
+#         "{:10.5f}".format(math.tan(inputGeo['tipIncidenceDeg'] * degToRad)) + 
 #         '         0        0          2         0         0\n')
 #fin.write('*\n')
 
@@ -768,13 +776,8 @@ if inputGeo['isVTailOn'] != 0:
               "{:10d}".format(iQuantVTail) +
               '         0         0\n')
 
-
-
-
-
-
-
 # Inboard elevator panel ***
+fin.write('*\n')	
 fin.write('*       X1        Y1        Z1     CORD1')
 fin.write(' COMMENT: INBOARD ELEVATOR PANEL\n') 
 fin.write("{:10.3f}".format(xSta1InIn + mainChordSta1InIn) +
@@ -795,10 +798,6 @@ fin.write("{:10.5f}".format(tanElevDeflection)+
          "{:10.5f}".format(tanElevDeflection) + 
          '         0        0          2         0         0\n')
 fin.write('*\n')
-
-
-
-
 
 # Outboard elevator panel ***
 fin.write('*       X1        Y1        Z1     CORD1')
@@ -821,10 +820,6 @@ fin.write("{:10.5f}".format(tanElevDeflection)+
          "{:10.5f}".format(tanElevDeflection) + 
          '         0        0          2         0         0\n')
 fin.write('*\n')
-
-
-
-
 
 # Stations that define survey grid (0=No survey, not used)
 fin.write('*\n')
