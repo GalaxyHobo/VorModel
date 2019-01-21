@@ -3,6 +3,15 @@ VorModel
 
 Creates a VORLAX input file based on parametric inputs...
 
+NOTE! Type: "%matplotlib auto" in iPython console to 
+switch to interactive plots, or "%matplotlib inline" 
+to switch to inline, in the console.
+
+NOTE! Reads path to Vorlax .exe in "path.txt" fill that must reside
+in same directory as vorRun.py. The path in that file must be on the 
+first line and begin with drive letter + colon, or "\". Assumes
+C-drive if path begins with "\".
+
 Assumes a wing, fuselage, horizontal tail (with dihedral) and vertical tail(s) 
 (with tilt inboard or outboard). If vertical tail has tilt or y offset, will 
 generate more than one vertical tail. Options for horizontal tail on/off, and 
@@ -138,9 +147,10 @@ inputGeo = {'acProject': 'Parametrically Generated Model',
     'mrpMacVTailPct': 25,
 # (ADD EXTRA COMPONENTS AS NEEDED)
 }
-# Establish working directory with exe ...
-# Copy & paste absolute path on local machine here within double quotes 
-userExePath = "C:\AeroProgs\Vorlax\VORLAX"
+# Read path to working directory with exe ...
+fout = open("path.txt", 'r')
+userExePath=fout.readline()
+fout.close()
 
 # STOP Changing Inputs Here ************************
 # Useful degree conversions
