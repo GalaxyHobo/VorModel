@@ -77,7 +77,7 @@ veranautics@gmail.com
 import math
 # START Changing Inputs Here ***************************
 inputGeo = {'acProject': 'Parametrically Generated Model',
-# WING DEFINITION:
+    # WING DEFINITION:
     'sRefInFt2': 1341.15,
     'arWing': 9.45,
     'taperWingInDecimal': 0.278,
@@ -87,11 +87,11 @@ inputGeo = {'acProject': 'Parametrically Generated Model',
     'mrpMacPct': 25,
     # Spanwise location of wing control stations
     'bSta1OverHalfSpan': 0.109552, # Spanwise Location of station #1 as fraction of half span (width of fuse)
-    'bSta2OverHalfSpan': 0.3, # Spanwise location of station #2 as fraction of half span 
+    'bSta2OverHalfSpan': 0.3, # Spanwise location of station #2 as fraction of half span
     'bSta3OverHalfSpan': 0.6, # Spanwise location of station #3 as fraction of half span 
     'bSta4OverHalfSpan': 0.8, # Spanwise location of station #4 as fraction of half span 
-    'bSta5OverHalfSpan': 0.97, # Spanwise location of station #5 as fraction of half span 
-    # Variation of chord from trapazoidal wing at control stations 
+    'bSta5OverHalfSpan': 0.97, # Spanwise location of station #5 as fraction of half span
+    # Variation of chord from trapazoidal wing at control stations
     'ratioCSta1OverCtrap': 1.3, # Ratio of actual chord at station #1 over reference chord of equivalent trapezoidal wing
     'ratioCSta2OverCtrap': 1.1, # Ratio of actual chord at station #2 over reference chord of equivalent trapezoidal wing
     'ratioCSta3OverCtrap': 1., # Ratio of actual chord at station #3 over reference chord of equivalent trapezoidal wing
@@ -99,25 +99,25 @@ inputGeo = {'acProject': 'Parametrically Generated Model',
     'ratioCSta5OverCtrap': 1., # Ratio of actual chord at station #5 over reference chord of equivalent trapezoidal wing
     'ratioCSta6OverCtrap': 0.5, # Ratio of actual chord at station #6 over reference chord of equivalent trapezoidal wing
     # Variation of sweep from reference value at control stations 
-    'sweepIncrDegSta1': 5, # Increment in actual sweep above reference sweep from station #1 to station #2 
+    'sweepIncrDegSta1': 5, # Increment in actual sweep above reference sweep from station #1 to station #2
     'sweepIncrDegSta2': 0, # Increment in actual sweep above reference sweep from station #2 to station #3
-    'sweepIncrDegSta3': 0., # Increment in actual sweep above reference sweep from station #3 to station #4
-    'sweepIncrDegSta4': 0., # Increment in actual sweep above reference sweep from station #4 to station #5
+    'sweepIncrDegSta3': 0, # Increment in actual sweep above reference sweep from station #3 to station #4
+    'sweepIncrDegSta4': 0, # Increment in actual sweep above reference sweep from station #4 to station #5
     'sweepIncrDegSta5': 45., # Increment in actual sweep above reference sweep from station #5 to station #6
     # Incidence at control stations, positive equal wash-OUT (TE up)
-    'incidenceDegSta1': 0, # Incidence at station #1 
-    'incidenceDegSta2': 0, # Incidence at station #2 
-    'incidenceDegSta3': 0.5, # Incidence at station #3 
-    'incidenceDegSta4': 1, # Incidence at station #4 
+    'incidenceDegSta1': 0, # Incidence at station #1
+    'incidenceDegSta2': 0, # Incidence at station #2
+    'incidenceDegSta3': 0.5, # Incidence at station #3
+    'incidenceDegSta4': 1, # Incidence at station #4
     'incidenceDegSta5': 2, # Incidence at station #5
     'incidenceDegSta6': 5, # Incidence at station #6
-     # Vertical shear at control stations, positive equal up from dihedral line
-    'zShearInInSta1': 0, # Vertical displacement above dehedral line at station #1 
-    'zShearInInSta2': 10, # Vertical displacement above dehedral line at station #2
-    'zShearInInSta3': 10, # Vertical displacement above dehedral line at station #3  
-    'zShearInInSta4': 10, # Vertical displacement above dehedral line at station #4
-    'zShearInInSta5': 10, # Vertical displacement above dehedral line at station #5
-    'zShearInInSta6': 20, # Vertical displacement above dehedral line at station #6
+    # Vertical shear at control stations, positive equal up from dihedral line
+    'zShearInInSta1': 0, # Vertical displacement above dihedral line at station #1 
+    'zShearInInSta2': 10, # Vertical displacement above dihedral line at station #2
+    'zShearInInSta3': 10, # Vertical displacement above dihedral line at station #3  
+    'zShearInInSta4': 10, # Vertical displacement above dihedral line at station #4
+    'zShearInInSta5': 10, # Vertical displacement above dihedral line at station #5
+    'zShearInInSta6': 20, # Vertical displacement above dihedral line at station #6
     # FUSELAGE DEFINITION:
     'lengthFuseInIn': 1497,
     'heightFuseInIn': 148,
@@ -145,7 +145,7 @@ inputGeo = {'acProject': 'Parametrically Generated Model',
     'yDispVTailBaseInIn': 0, # Spanwise displacement of base of vertical tail 
     'xDistVTailBaseInIn': 1300,
     'mrpMacVTailPct': 25,
-# (ADD EXTRA COMPONENTS AS NEEDED)
+    # (ADD EXTRA COMPONENTS AS NEEDED)
 }
 # Read path to working directory with exe ...
 fout = open("path.txt", 'r')
@@ -157,7 +157,7 @@ fout.close()
 radToDeg = 180 / math.pi
 degToRad = 1 / radToDeg
 
-# Determine wing characteristics 
+# Determine wing characteristics
 tanDihedralAngle = math.tan(inputGeo['dihedralWingInDeg'] * degToRad)
 tanSweepLeWing = math.tan(inputGeo['sweepLeWingInDeg'] * degToRad)
 sRefInIn2 = 144 * inputGeo['sRefInFt2']
@@ -181,7 +181,7 @@ xMrpInIn = xLeMacInIn + cMacInIn * inputGeo['mrpMacPct'] / 100
 cWingFuseInIn = cRootInIn - \
                 inputGeo['bSta1OverHalfSpan'] * (cRootInIn - cTipInIn) 
 xWingFuseInIn = inputGeo['xDistWingApexInIn'] + halfFuseInIn * tanSweepLeWing 
-xTipInIn = inputGeo['xDistWingApexInIn'] + bOver2InIn * tanSweepLeWing 
+xTipInIn = inputGeo['xDistWingApexInIn'] + bOver2InIn * tanSweepLeWing
 zTipInIn = (bOver2InIn - halfFuseInIn) * tanDihedralAngle
 
 # Determine spanwise location of wing control stations 
@@ -203,7 +203,7 @@ chordSta4InIn = (cRootInIn - inputGeo['bSta4OverHalfSpan'] * \
                 (cRootInIn - cTipInIn)) * inputGeo['ratioCSta4OverCtrap'] 
 chordSta5InIn = (cRootInIn - inputGeo['bSta5OverHalfSpan'] * \
                 (cRootInIn - cTipInIn)) * inputGeo['ratioCSta5OverCtrap'] 
-chordSta6InIn = cTipInIn * inputGeo['ratioCSta6OverCtrap'] 
+chordSta6InIn = cTipInIn * inputGeo['ratioCSta6OverCtrap']
 
 # Determine horizontal tail characteristics
 tanHTailDihedralAngle = math.tan(inputGeo['dihedralHTailInDeg'] * degToRad)
@@ -356,14 +356,14 @@ fin.write('* sweepIncrDegSta3: ' + \
           "{:10.3f}".format(inputGeo['sweepIncrDegSta3']) + \
           ' #Increment in sweep, station 3 to 4\n')
 fin.write('* sweepIncrDegSta4: ' + \
-          "{:10.3f}".format(inputGeo['sweepIncrDegSta4' ]) + \
+          "{:10.3f}".format(inputGeo['sweepIncrDegSta4']) + \
           ' #Increment in sweep, station 4 to 5\n')
 fin.write('* sweepIncrDegSta5: ' + \
-          "{:10.3f}".format(inputGeo['sweepIncrDegSta5' ]) + \
+          "{:10.3f}".format(inputGeo['sweepIncrDegSta5']) + \
           ' #Increment in sweep, station 5 to 6\n')
 fin.write('*\n')
 
-fin.write('*Incidence at control stations - positive = wash-OUT (TE up):\n')
+fin.write('*Incidence at control stations - positive = wash-OUT (TE UP):\n')
 fin.write('* incidenceDegSta1: ' + \
           "{:10.3f}".format(inputGeo['incidenceDegSta1']) + \
           ' #Incidence at station 1\n')
@@ -521,7 +521,7 @@ chordFuseTopEdgeInIn = inputGeo['lengthFuseInIn'] - xFuseTopEdgeInIn - \
                        math.tan((inputGeo['tailTopAngle']) * degToRad)
 fin.write("{:10.3f}".format(xFuseTopEdgeInIn) +
           "{:10.3f}".format(0) +
-          "{:10.3f}".format(inputGeo['heightFuseInIn']) + 
+          "{:10.3f}".format(inputGeo['heightFuseInIn']) +
           "{:10.3f}".format(chordFuseTopEdgeInIn) + '\n')
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
 fin.write('        10     15.00      1.00      0.00\n')
@@ -580,10 +580,10 @@ fin.write('*VORLAX inputs for Wing:\n')
 
 # Inboard-most wing panel ***
 fin.write('*       X1        Y1        Z1     CORD1')
-fin.write(' COMMENT: INBOARD-MOST WING PANEL\n')            
+fin.write(' COMMENT: INBOARD-MOST WING PANEL\n')
 fin.write("{:10.3f}".format(xWingFuseInIn) +
           "{:10.3f}".format(ySta1InIn) +
-          "{:10.3f}".format(tanDihedralAngle * (ySta1InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta1InIn - halfFuseInIn) +
           inputGeo['zShearInInSta1']) +
           "{:10.3f}".format(chordSta1InIn) + '\n')
 fin.write('*       X2        Y2        Z2     CORD2\n')
@@ -592,7 +592,7 @@ xSta2InIn = xWingFuseInIn + (ySta2InIn - ySta1InIn) * \
             inputGeo['sweepIncrDegSta1']) * degToRad)
 fin.write("{:10.3f}".format(xSta2InIn) +
           "{:10.3f}".format(ySta2InIn) +
-          "{:10.3f}".format(tanDihedralAngle * (ySta2InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta2InIn - halfFuseInIn) +
           inputGeo['zShearInInSta2']) +
           "{:10.3f}".format(chordSta2InIn) + '\n')
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
@@ -609,7 +609,7 @@ fin.write('*       X1        Y1        Z1     CORD1')
 fin.write(' COMMENT: SECOND INBOARD WING PANEL\n') 
 fin.write("{:10.3f}".format(xSta2InIn) +
           "{:10.3f}".format(ySta2InIn) +
-          "{:10.3f}".format(tanDihedralAngle * (ySta2InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta2InIn - halfFuseInIn) +
           inputGeo['zShearInInSta2']) +
           "{:10.3f}".format(chordSta2InIn) + '\n') 
 fin.write('*       X2        Y2        Z2     CORD2\n')
@@ -618,9 +618,9 @@ xSta3InIn = xSta2InIn + (ySta3InIn - ySta2InIn) * \
             inputGeo['sweepIncrDegSta2']) * degToRad)
 fin.write("{:10.3f}".format(xSta3InIn) + \
           "{:10.3f}".format(ySta3InIn) +
-          "{:10.3f}".format(tanDihedralAngle * (ySta3InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta3InIn - halfFuseInIn) +
           inputGeo['zShearInInSta3']) +
-          "{:10.3f}".format(chordSta3InIn) + '\n') 
+          "{:10.3f}".format(chordSta3InIn) + '\n')
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
 fin.write('        10     15.00      1.00      0.00\n')
 fin.write('*    AINC1     AINC2       ITS       NAP    ')
@@ -635,7 +635,7 @@ fin.write('*       X1        Y1        Z1     CORD1')
 fin.write(' COMMENT: MIDDLE WING PANEL\n') 
 fin.write("{:10.3f}".format(xSta3InIn) +
           "{:10.3f}".format(ySta3InIn) +
-          "{:10.3f}".format(tanDihedralAngle * (ySta3InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta3InIn - halfFuseInIn) +
           inputGeo['zShearInInSta3']) +
           "{:10.3f}".format(chordSta3InIn) + '\n')
 fin.write('*       X2        Y2        Z2     CORD2\n')
@@ -644,9 +644,9 @@ xSta4InIn = xSta3InIn + (ySta4InIn - ySta3InIn) * \
             inputGeo['sweepIncrDegSta3']) * degToRad)
 fin.write("{:10.3f}".format(xSta4InIn) +
           "{:10.3f}".format(ySta4InIn) +
-          "{:10.3f}".format(tanDihedralAngle * (ySta4InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta4InIn - halfFuseInIn) +
           inputGeo['zShearInInSta4']) +
-          "{:10.3f}" .format(chordSta4InIn) + '\n') 
+          "{:10.3f}".format(chordSta4InIn) + '\n') 
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
 fin.write('        10     15.00      1.00      0.00\n')
 fin.write('*    AINC1     AINC2       ITS       NAP    ')
@@ -670,7 +670,7 @@ math.tan((inputGeo['sweepLeWingInDeg'] + \
           inputGeo['sweepIncrDegSta4']) * degToRad) 
 fin.write("{:10.3f}".format(xSta5InIn) +
           "{:10.3f}".format(ySta5InIn) +
-          "{:10.3f}".format(tanDihedralAngle * (ySta5InIn - halfFuseInIn) + 
+          "{:10.3f}".format(tanDihedralAngle * (ySta5InIn - halfFuseInIn) +
           inputGeo['zShearInInSta5']) +
           "{:10.3f}".format(chordSta5InIn) + '\n')
 fin.write('*     NVOR      RNCV       SPC       PDL\n')
